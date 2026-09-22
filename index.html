@@ -592,7 +592,13 @@ document.getElementById("reset").onclick=function(){
   [["layouts","layout"],["motions","motion"],["styles","pal"]].forEach(function(p){
     var c=document.getElementById(p[0]);
     [].forEach.call(c.children,function(x,i){x.classList.toggle("on",i===0);});});
-  _bgKey="";render();log("RESET","all","cleared");};
+  _bgKey="";
+  texts.slice().forEach(function(x){if(x.el&&x.el.parentNode)x.el.parentNode.removeChild(x.el);});
+  texts=[];selText=-1;textIdx=-1;
+  var _si=document.getElementById("selInfo");if(_si)_si.textContent="当前未选中文字";
+  var _tb=document.getElementById("textBtn");if(_tb)_tb.textContent="生成文字排版";
+  var _ct=document.getElementById("customText");if(_ct)_ct.value="";
+  render();log("RESET","all","cleared");};
 document.getElementById("guide").onclick=function(){state.guide=!state.guide;
   this.classList.toggle("on",state.guide);log("GUIDE","state",state.guide);};
 document.getElementById("textBtn").onclick=function(){
