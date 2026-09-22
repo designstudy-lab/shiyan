@@ -596,8 +596,8 @@ document.getElementById("reset").onclick=function(){
 document.getElementById("guide").onclick=function(){state.guide=!state.guide;
   this.classList.toggle("on",state.guide);log("GUIDE","state",state.guide);};
 document.getElementById("textBtn").onclick=function(){
-  textIdx=(textIdx+1)%6;stepDone.text=true;applyTemplate(textIdx);updateGuide();
-  this.textContent="切换文字版式 "+(textIdx+1)+"/6";
+  textIdx=(textIdx+1)%8;stepDone.text=true;applyTemplate(textIdx);updateGuide();
+  this.textContent="换一套文字排版";
   log("POSTER_TEXT","design",textIdx);};
 setInterval(function(){var s=Math.floor((Date.now()-T0)/1000);
   document.getElementById("timer").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");},1000);
@@ -775,15 +775,32 @@ var TEMPLATES=[
    {str:"New Media Art",x:0.07,y:0.735,size:16,font:0,color:2},
    {str:"2027.01.15 — 02.28",x:0.07,y:0.80,size:14,font:0,color:0},
    {str:"M Woods Museum   Gallery 1",x:0.07,y:0.845,size:12,font:0,color:2},
-   {str:"Weekend Screenings   11:00 / 15:00 / 19:00",x:0.07,y:0.885,size:12,font:0,color:2}]}
+   {str:"Weekend Screenings   11:00 / 15:00 / 19:00",x:0.07,y:0.885,size:12,font:0,color:2}]},
+ {name:"竖排题名",items:[
+   {str:"D\nA\nN\nG\nD\nA\nI",x:0.80,y:0.42,size:30,font:0,color:0},
+   {str:"CONTEMPORARY ART",x:0.10,y:0.14,size:26,font:0,color:0},
+   {str:"A Group Exhibition of Young Artists",x:0.10,y:0.21,size:16,font:0,color:2},
+   {str:"2026.11.06 — 12.20",x:0.10,y:0.80,size:14,font:0,color:0},
+   {str:"Power Station of Art  Floor 3",x:0.10,y:0.845,size:12,font:0,color:2},
+   {str:"Open 10:00 — 18:00   Closed Monday",x:0.10,y:0.885,size:12,font:0,color:2}]},
+ {name:"编号版",items:[
+   {str:"NO.08",x:0.14,y:0.10,size:56,font:2,color:4},
+   {str:"ORDER AND CHAOS",x:0.72,y:0.60,size:30,font:0,color:0},
+   {str:"Selected Works on Pattern and Code",x:0.72,y:0.655,size:14,font:0,color:2},
+   {str:"2027.04.02 — 05.16",x:0.14,y:0.80,size:14,font:0,color:0},
+   {str:"West Bund Art Center  Building C",x:0.14,y:0.845,size:12,font:0,color:2},
+   {str:"Curated by Studio Nine   Free Admission",x:0.14,y:0.885,size:12,font:0,color:2}]}
 ];
 function applyTemplate(i){
-  var t=TEMPLATES[i%TEMPLATES.length],out=[];
+  var t=TEMPLATES[i%TEMPLATES.length];
+  texts.slice().forEach(function(x){if(x.el&&x.el.parentNode)x.el.parentNode.removeChild(x.el);});
+  texts=[];selText=-1;
   t.items.forEach(function(it){
-    out.push({str:it.str,x:it.x*W-W/2,y:it.y*H-H/2,size:it.size,colorIdx:it.color,
-      fontIdx:it.font||0,center:!!it.center});
+    var o={str:it.str,x:it.x,y:it.y,sizeFrac:it.size/W,colorIdx:it.color,fontIdx:it.font||0};
+    texts.push(o);makeTextEl(o);
   });
-  texts=out;selText=-1;refreshTUI();render();
+  var si=document.getElementById("selInfo");
+  if(si)si.textContent="已生成《"+t.name+"》版式，共 "+texts.length+" 段文字，可点击拖动或双击修改";
   log("TEXT_TEMPLATE","name",t.name);
 }
 
