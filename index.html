@@ -1170,7 +1170,7 @@ function submitAll(){
   }catch(e){ fallbackDownload(payload); done(); }
 }
 function buildCode(){
-  var tx=texts.map(function(t){return t.str.replace(/[|~]/g,"/")+":"+t.x.toFixed(3)+","+t.y.toFixed(3)+","+t.sizeFrac.toFixed(4)+","+t.colorIdx+","+t.fontIdx;}).join("~")||"-";
+  var tx=texts.map(function(t){return String(t.str||"").replace(/[|~]/g,"/")+":"+(+t.x||0).toFixed(3)+","+(+t.y||0).toFixed(3)+","+(+t.sizeFrac||0.05).toFixed(4)+","+(t.colorIdx||0)+","+(t.fontIdx||0);}).join("~")||"-";
   var f=["V31",cond,textIdx<0?"-":textIdx,tx,state.layout,state.pal,state.seq.join("."),
          Math.round(state.count),Math.round(state.spread*100),Math.round(state.rot),
          Math.round(state.size*100),Math.round((mainPos.gs||1)*100),
