@@ -26,7 +26,7 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
   .canvasWrap{position:relative;display:inline-block;max-width:100%;margin:0 auto}
   #overlay{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-  .txt{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;white-space:pre;
+  .txt{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;white-space:pre-wrap;max-width:86%;
        padding:2px 6px;border:1.5px dashed transparent;border-radius:4px;cursor:move;
        touch-action:none;user-select:none;-webkit-user-select:none}
   .txt.sel{border-color:#5a78ff;background:rgba(90,120,255,.09)}
@@ -38,8 +38,9 @@
   .txt.sel .del{display:block}
   canvas#art{width:auto;max-width:100%;max-height:calc(100vh - 210px);height:auto;margin:0 auto;
              display:block;border-radius:8px;background:#0b0d10;
-             touch-action:none;-webkit-user-select:none;user-select:none;
+             touch-action:pan-y;-webkit-user-select:none;user-select:none;
              -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  body.dragging canvas#art{touch-action:none}
   @media(max-width:920px){canvas#art{width:100%;max-height:none}}
   h3{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600}
   .motifs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -129,6 +130,7 @@
         <button id="recolor">给上一个母题换色</button>
         <button id="reset">清空重来</button>
         <button id="guide">构图辅助线</button>
+        <button id="moveMode">移动画面</button>
         <span class="muted" id="count2"></span>
       </div>
     </div>
@@ -161,8 +163,8 @@
       </div>
       <div class="card" style="margin-top:12px" id="textCard">
         <h3>文字排版</h3>
-        <button id="textBtn" class="primary">生成文字排版（六套版式循环）</button>
-        <div class="muted" style="margin:6px 0 2px">生成后可直接点击画布上的文字拖动位置；选中后可改字号、字体与颜色。</div>
+        <button id="textBtn" class="primary">生成文字排版</button>
+        <div class="muted" style="margin:6px 0 2px">点一次换一套版式；生成后可点击文字拖动位置，双击可改文字。</div>
         <div class="muted" style="margin:4px 0 6px;color:#ffb86b">提示：海报文字请使用英文或拼音，中文在版面中不易排得美观。</div>
         <div id="selInfo" class="muted" style="margin-bottom:6px">当前未选中文字</div>
         <input type="text" id="customText" placeholder="也可自己写一句英文或拼音，例如 SILENT BLOOM">
@@ -593,6 +595,11 @@ document.getElementById("reset").onclick=function(){
     var c=document.getElementById(p[0]);
     [].forEach.call(c.children,function(x,i){x.classList.toggle("on",i===0);});});
   _bgKey="";render();log("RESET","all","cleared");};
+document.getElementById("moveMode").onclick=function(){
+  var on=document.body.classList.toggle("dragging");
+  this.classList.toggle("on",on);
+  this.textContent=on?"退出移动模式":"移动画面";
+  log("MOVE_MODE","state",on?"on":"off");};
 document.getElementById("guide").onclick=function(){state.guide=!state.guide;
   this.classList.toggle("on",state.guide);log("GUIDE","state",state.guide);};
 document.getElementById("textBtn").onclick=function(){
@@ -812,8 +819,12 @@ function canvasW(){var r=document.getElementById("art").getBoundingClientRect();
 function pxSize(t){return t.sizeFrac*canvasW();}
 function fontOf(t){return (t.fontIdx===1?"600 ":"700 ")+pxSize(t)+"px "+FONTS[t.fontIdx];}
 function colorOf(t){var c=textColors()[t.colorIdx]||textColors()[0];return c;}
+function anchorOf(x){ return x<=0.22 ? "left" : (x>=0.78 ? "right" : "center"); }
 function paintEl(t){
   if(!t.el)return;
+  var a=anchorOf(t.x);
+  t.el.style.transform = a==="left" ? "translate(0,-50%)" : (a==="right" ? "translate(-100%,-50%)" : "translate(-50%,-50%)");
+  t.el.style.textAlign = a;
   t.el.style.left=(t.x*100)+"%";t.el.style.top=(t.y*100)+"%";
   t.el.style.font=fontOf(t);t.el.style.color=colorOf(t);
   t.el.style.fontFamily=FONTS[t.fontIdx];
