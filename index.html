@@ -40,7 +40,6 @@
              display:block;border-radius:8px;background:#0b0d10;
              touch-action:pan-y;-webkit-user-select:none;user-select:none;
              -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
-  body.dragging canvas#art{touch-action:none}
   @media(max-width:920px){canvas#art{width:100%;max-height:none}}
   h3{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600}
   .motifs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -130,7 +129,6 @@
         <button id="recolor">给上一个母题换色</button>
         <button id="reset">清空重来</button>
         <button id="guide">构图辅助线</button>
-        <button id="moveMode">移动画面</button>
         <span class="muted" id="count2"></span>
       </div>
     </div>
@@ -595,11 +593,6 @@ document.getElementById("reset").onclick=function(){
     var c=document.getElementById(p[0]);
     [].forEach.call(c.children,function(x,i){x.classList.toggle("on",i===0);});});
   _bgKey="";render();log("RESET","all","cleared");};
-document.getElementById("moveMode").onclick=function(){
-  var on=document.body.classList.toggle("dragging");
-  this.classList.toggle("on",on);
-  this.textContent=on?"退出移动模式":"移动画面";
-  log("MOVE_MODE","state",on?"on":"off");};
 document.getElementById("guide").onclick=function(){state.guide=!state.guide;
   this.classList.toggle("on",state.guide);log("GUIDE","state",state.guide);};
 document.getElementById("textBtn").onclick=function(){
@@ -961,7 +954,7 @@ function pos(e){var r=cv.getBoundingClientRect();
   var y=(e.clientY!==undefined?e.clientY:e.touches[0].clientY)-r.top;
   return {x:x*W/r.width,y:y*H/r.height};}
 cv.addEventListener("pointerdown",function(e){
-  e.preventDefault();
+  if(e.pointerType&&e.pointerType!=="mouse")return;   // 触摸不接管，交给页面滚动
   var p0=pos(e);
   selText=-1;refreshTUI();
   var si2=document.getElementById("selInfo");if(si2)si2.textContent="当前未选中文字";
@@ -981,7 +974,7 @@ function endDrag(){
 }
 window.addEventListener("pointerup",endDrag);
 cv.addEventListener("pointercancel",endDrag);
-window.addEventListener("touchstart",function(e){if(e.target===cv)e.preventDefault();},{passive:false});
+
 cv.style.cursor="grab";
 function gTarget(){return mainPos;}
 var gsEl=document.getElementById("gsize");
