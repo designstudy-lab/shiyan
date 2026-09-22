@@ -1210,7 +1210,12 @@ function submitAll(){
 }
 function buildCode(){
   var tx=texts.map(function(t){return String(t.str||"").replace(/[|~]/g,"/")+":"+(+t.x||0).toFixed(3)+","+(+t.y||0).toFixed(3)+","+(+t.sizeFrac||0.05).toFixed(4)+","+(t.colorIdx||0)+","+(t.fontIdx||0);}).join("~")||"-";
-  var f=["V31",cond,textIdx<0?"-":textIdx,tx,state.layout,state.pal,state.seq.join("."),
+  function evc(t){var n=0;for(var i=0;i<events.length;i++){if(events[i].type===t)n++;}return n;}
+  var ev="mp"+evc("MOTIF_PICK")+"-sl"+evc("SLIDER")+"-tt"+evc("TEXT_TEMPLATE")+"-tm"+evc("TEXT_MOVE")
+        +"-te"+evc("TEXT_EDIT")+"-as"+evc("AI_SUGGEST")+"-aa"+evc("AI_SUGGEST_ACCEPT")
+        +"-ar"+evc("AI_SUGGEST_REJECT")+"-ap"+evc("AI_PLAN_APPLY")+"-rs"+evc("RESET")
+        +"-ex"+evc("EXPORT_IMAGE");
+  var f=["V32",cond,textIdx<0?"-":textIdx,tx,ev,state.layout,state.pal,state.seq.join("."),
          Math.round(state.count),Math.round(state.spread*100),Math.round(state.rot),
          Math.round(state.size*100),Math.round((mainPos.gs||1)*100),
          Math.round((Date.now()-T0)/1000),events.length,
