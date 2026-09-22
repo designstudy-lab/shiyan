@@ -926,10 +926,6 @@ function nudge(dx,dy){
   if(selText<0){alert("请先点选一段文字");return;}
   texts[selText].x+=dx;texts[selText].y+=dy;render();
   log("TEXT_NUDGE","dir",dx+","+dy);}
-document.getElementById("nudUp").onclick=function(){nudge(0,-14);};
-document.getElementById("nudDown").onclick=function(){nudge(0,14);};
-document.getElementById("nudLeft").onclick=function(){nudge(-14,0);};
-document.getElementById("nudRight").onclick=function(){nudge(14,0);};
 buildTfonts();buildTcolors();
 var signChoice="",sigName="";
 function pos(e){var r=cv.getBoundingClientRect();
