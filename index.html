@@ -225,7 +225,10 @@
     <div id="codeArea" style="display:none;margin-top:12px">
       <div class="muted" style="margin-bottom:6px">请复制下面的完成码，粘贴到问卷的填空处，然后提交问卷：</div>
       <textarea id="codeBox" style="width:100%;height:64px;font-size:12px"></textarea>
-      <button id="copyCode" class="primary" style="margin-top:6px">复制完成码</button>
+      <div class="row" style="margin-top:6px">
+        <button id="copyCode" class="primary">复制完成码</button>
+        <button id="resume" class="muted">返回继续修改</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1010,8 +1013,17 @@ document.getElementById("finish").onclick=function(){
   document.getElementById("doneSummary").innerHTML=
     "用时 <b>"+Math.floor(s/60)+" 分 "+(s%60)+" 秒</b>，加入母题 <b>"+state.seq.length+
     "</b> 个，共记录 <b>"+events.length+"</b> 条操作事件。请先选择署名方式。";
-  done.classList.add("show");this.disabled=true;done.scrollIntoView({behavior:"smooth"});
+  done.classList.add("show");this.disabled=true;
+  var tb=document.getElementById("taskBar");if(tb)tb.style.display="none";
+  done.scrollIntoView({behavior:"smooth"});
   showCode();};
+document.getElementById("resume").onclick=function(){
+  var d=document.getElementById("doneCard");if(d)d.classList.remove("show");
+  var tb=document.getElementById("taskBar");if(tb)tb.style.display="block";
+  var f=document.getElementById("finish");if(f)f.disabled=false;
+  var ca=document.getElementById("codeArea");if(ca)ca.style.display="none";
+  log("RESUME","edit","");
+};
 document.getElementById("copyCode").onclick=function(){
   var t=document.getElementById("codeBox");t.select();
   try{navigator.clipboard.writeText(t.value);}catch(e){document.execCommand("copy");}
