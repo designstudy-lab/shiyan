@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>纹样共创 · 展览主视觉 v31</title>
+<title>视觉展览 · 展览主视觉 v31</title>
 <style>
   :root{--bg:#0e1014;--panel:#191d24;--line:#2a303a;--text:#e9edf3;--muted:#96a0af;
         --accent:#7aa2ff;--ai:#8ee6c8}
@@ -92,7 +92,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>纹样共创</h1>
+    <h1>视觉展览</h1>
     <span class="tag">v31</span>
     <span class="tag" id="pidTag">被试编号</span>
     <span class="tag" id="condTag">条件</span>
@@ -748,7 +748,7 @@ var TEMPLATES=[
    {str:"2026.10.17 — 11.21",x:0.075,y:0.80,size:15,font:0,color:0},
    {str:"Hangzhou International Exhibition Center  Hall A",x:0.075,y:0.845,size:13,font:0,color:2},
    {str:"Curated by Studio Nine   Open 10:00 — 18:00   Free Admission",x:0.075,y:0.885,size:12,font:0,color:2}]},
- {name:"纹样再生",items:[
+ {name:"视觉展览",items:[
    {str:"PATTERNS RENEWAL",x:0.10,y:0.09,size:36,font:0,color:0},
    {str:"Digital Art Exhibition",x:0.10,y:0.145,size:17,font:0,color:2},
    {str:"NO.02 / 2026",x:0.10,y:0.185,size:12,font:2,color:2},
@@ -807,7 +807,7 @@ function applyTemplate(i){
     texts.push(o);makeTextEl(o);
   });
   var si=document.getElementById("selInfo");
-  if(si)si.textContent="已生成《"+t.name+"》版式，共 "+texts.length+" 段文字，可点击拖动或双击修改";
+  if(si)si.textContent="已生成《"+t.name+"》版式，可点击拖动或双击修改文字";
   log("TEXT_TEMPLATE","name",t.name);
 }
 
